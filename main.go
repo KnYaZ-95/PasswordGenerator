@@ -17,7 +17,7 @@ func getSymbols(specSymbols string) ([]rune, error) {
 	case "n":
 		// do nothing
 	default:
-		return []rune{}, errors.New("invalid input: enter 'y' or 'n' only")
+		return []rune{}, errors.New("ValueError")
 	}
 
 	runes := []rune(result)
@@ -38,7 +38,7 @@ func main() {
 		fmt.Print("Enter password length: ")
 		_, err := fmt.Scan(&passwordLength)
 		if err != nil || passwordLength < 1 {
-			fmt.Print("Please enter a valid positive number\n\n")
+			fmt.Print("[!] Please enter a valid positive number\n\n")
 			continue
 		}
 		fmt.Print("Do you need spec symbols? (y/n): ")
@@ -46,7 +46,7 @@ func main() {
 
 		symbols, err := getSymbols(chooseSymbols)
 		if err != nil {
-			fmt.Printf("%s: enter 'y' or 'n' only (not key sensitive)\n\n", err)
+			fmt.Printf("[!] %s: enter 'y' or 'n' only (not key sensitive)\n\n", err)
 			continue
 		}
 		for i := 0; i < passwordLength; i++ {
