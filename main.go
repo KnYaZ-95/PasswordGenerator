@@ -3,29 +3,31 @@ package main
 import (
 	"errors"
 	"fmt"
-	"math/rand"
+	"math/rand/v2"
 	"strings"
 )
 
-func getSymbols(specSymbols string) ([]rune, error) {
-	result := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	spec := "!@#$%^&*()"
+func generatePassword(passwordLength int, specSymbols string) (string, error) {
+	lettersAndDigits := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	specs := "!@#$%^&*()"
+	var finalString string
 
 	switch strings.ToLower(specSymbols) {
 	case "y":
-		result += spec
+		finalString = lettersAndDigits + specs
 	case "n":
-		// do nothing
+		finalString = lettersAndDigits
 	default:
-		return []rune{}, errors.New("ValueError")
+		return "", errors.New("ValueError")
 	}
 
-	runes := []rune(result)
-	rand.Shuffle(len(runes), func(i, j int) {
-		runes[i], runes[j] = runes[j], runes[i]
-	})
+	finalStringLength := len(finalString)
+	password := make([]byte, passwordLength)
 
-	return runes, nil
+	for i := 0; i < passwordLength; i++ {
+		password[i] = finalString[rand.IntN(finalStringLength)]
+	}
+	return string(password), nil
 }
 
 func main() {
@@ -41,19 +43,17 @@ func main() {
 			fmt.Print("[!] Please enter a valid positive number\n\n")
 			continue
 		}
+
 		fmt.Print("Do you need spec symbols? (y/n): ")
 		fmt.Scan(&chooseSymbols)
 
-		symbols, err := getSymbols(chooseSymbols)
+		password, err := generatePassword(passwordLength, chooseSymbols)
 		if err != nil {
 			fmt.Printf("[!] %s: enter 'y' or 'n' only (not key sensitive)\n\n", err)
 			continue
 		}
-		for i := 0; i < passwordLength; i++ {
-			fmt.Printf("%c", symbols[rand.Intn(len(symbols))])
-		}
 
-		fmt.Print("\nAnother one? (y/n): ")
+		fmt.Printf("%v\nAnother one? (y/n): ", password)
 		fmt.Scan(&anotherOne)
 		if strings.ToLower(anotherOne) == "y" {
 			continue
