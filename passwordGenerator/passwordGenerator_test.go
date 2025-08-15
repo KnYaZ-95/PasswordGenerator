@@ -15,7 +15,7 @@ func TestGeneratePassword(t *testing.T) {
 		{"Length 10, no special", 10, false, 10, ""},
 		{"Length 5, with special", 5, true, 5, ""},
 		{"Length 0", 0, true, 0, "password length must be greater than zero"},
-		{"Length -1", -1, true, -1, "password length must be greater than zero"}, // Должен вернуть ошибку
+		{"Length -1", -1, true, -1, "password length must be greater than zero"},
 	}
 
 	for _, tt := range tests {
