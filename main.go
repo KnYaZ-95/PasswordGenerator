@@ -1,37 +1,14 @@
 package main
 
 import (
-	"errors"
+	"PasswordGenerator/passwordGenerator"
 	"fmt"
-	"math/rand/v2"
 	"strings"
 )
 
-func generatePassword(passwordLength int, specSymbols string) (string, error) {
-	lettersAndDigits := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	specs := "!@#$%^&*()"
-	var finalString string
-
-	switch strings.ToLower(specSymbols) {
-	case "y":
-		finalString = lettersAndDigits + specs
-	case "n":
-		finalString = lettersAndDigits
-	default:
-		return "", errors.New("ValueError")
-	}
-
-	finalStringLength := len(finalString)
-	password := make([]byte, passwordLength)
-
-	for i := 0; i < passwordLength; i++ {
-		password[i] = finalString[rand.IntN(finalStringLength)]
-	}
-	return string(password), nil
-}
-
 func main() {
 
+	var password string
 	var passwordLength int
 	var chooseSymbols string
 	var anotherOne string
@@ -44,12 +21,16 @@ func main() {
 			continue
 		}
 
-		fmt.Print("Do you need spec symbols? (y/n): ")
+		fmt.Print("Do you need special symbols? (y/n): ")
 		fmt.Scan(&chooseSymbols)
 
-		password, err := generatePassword(passwordLength, chooseSymbols)
-		if err != nil {
-			fmt.Printf("[!] %s: enter 'y' or 'n' only (not key sensitive)\n\n", err)
+		switch strings.ToLower(chooseSymbols) {
+		case "y":
+			password, _ = passwordGenerator.GeneratePassword(passwordLength, true)
+		case "n":
+			password, _ = passwordGenerator.GeneratePassword(passwordLength, false)
+		default:
+			fmt.Println("[!] Enter 'y' or 'n' only (not key sensitive)")
 			continue
 		}
 
