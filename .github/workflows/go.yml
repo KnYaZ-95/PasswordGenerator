@@ -2,7 +2,7 @@ name: Go СШ
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "workflow_and_tests" ]
   pull_request:
     branches: [ "master" ]
 
