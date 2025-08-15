@@ -1,4 +1,4 @@
-name: Go CI
+name: Password generator build
 
 on:
   push:
@@ -8,12 +8,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        go-version: ['1.24.x']
-        os: [ubuntu-latest, windows-latest]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -21,17 +16,19 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: "1.24.x"
 
-      - name: Tests
+      - name: Run tests
         run: go test -v -covermode=atomic ./passwordGenerator
 
-      - name: Build bin file
+      - name: Build binaries for all platforms
         run: |
-          go build -v -ldflags="-s -w" -o myapp${{ matrix.os == 'windows-latest' && '.exe' || '' }} ./...
+          mkdir -p dist
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/PassGen-windows-amd64.exe ./passwordGenerator
+          GOOS=linux   GOARCH=amd64 go build -ldflags="-s -w" -o dist/PassGen-linux-amd64 ./passwordGenerator
 
-      - name: Upload artifact
+      - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
-          name: PassGen-${{ matrix.os }}
-          path: PassGen${{ matrix.os == 'windows-latest' && '.exe' || '' }}
+          name: PassGenBinaries
+          path: dist/*
