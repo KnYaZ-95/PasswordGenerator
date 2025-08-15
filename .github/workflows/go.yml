@@ -1,0 +1,30 @@
+name: Go СШ
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.24.x']
+        os: [ubuntu-latest, windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Test
+        run: go test -v -covermode=atomic ./passwordGenerator
+
+      - name: Build
+        run: go build -v -ldflags="-s -w" -o bin/app ./...
