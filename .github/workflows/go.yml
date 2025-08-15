@@ -24,8 +24,8 @@ jobs:
       - name: Build binaries for all platforms
         run: |
           mkdir -p dist
-          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/PassGen-windows-amd64.exe ./passwordGenerator
-          GOOS=linux   GOARCH=amd64 go build -ldflags="-s -w" -o dist/PassGen-linux-amd64 ./passwordGenerator
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/PassGen-windows-amd64.exe .
+          GOOS=linux   GOARCH=amd64 go build -ldflags="-s -w" -o dist/PassGen-linux-amd64 .
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
